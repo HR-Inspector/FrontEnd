@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import styled from "@emotion/styled";
-import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import type { RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/auth";
@@ -25,6 +25,9 @@ import { getAllBranches, selectBranch } from "../store/slices/branch";
 import Alert from "@mui/material/Alert";
 import { setMessage } from "../store/slices/message";
 import { getAllEmployees, selectEmployee } from "../store/slices/employee";
+import { jwtDecode } from 'jwt-decode';
+import { IJwtDecoded } from "../types/jwt";
+import { EMPLOYEE_ROLE } from "../types/employee";
 
 interface Props {
   /**
@@ -60,7 +63,10 @@ const StyledLinkBlack = styled(RouterLink)`
 const Page = (props: Props) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+  const location =  useLocation();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const token = useSelector((state: RootState) => state.auth.token);
+  const [decodedToken, setDecodedToken] = React.useState<IJwtDecoded | null>(null);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -86,7 +92,33 @@ const Page = (props: Props) => {
   }, [isLoggedIn, navigate]);
 
   React.useEffect(() => {
-    if (companyId && !selectedCompany) {
+    if (token) {
+      const decoded = jwtDecode(token) as IJwtDecoded;  
+      setDecodedToken(decoded);
+    }
+  }, [token]);
+
+  React.useEffect(() => {
+    if (decodedToken) {  
+      if (decodedToken.role === EMPLOYEE_ROLE.SUPER_ADMIN) {
+        return;
+      } else if (decodedToken.role === EMPLOYEE_ROLE.EDITOR || decodedToken.role === EMPLOYEE_ROLE.ADMIN) {
+        if(location.pathname === '/companies') {
+          console.log('here')
+          console.log('decoded.companyId')
+          console.log(decodedToken.companyId)
+          navigate(`/companies/${decodedToken.companyId}/branches/`);
+        }
+      } else {
+        dispatch(logout());
+        navigate('/login')
+      }
+    }
+  }, [dispatch, navigate, location.pathname, decodedToken])
+
+
+  React.useEffect(() => {
+    if (companyId && !selectedCompany && decodedToken?.role === EMPLOYEE_ROLE.SUPER_ADMIN) {
       dispatch(getAllCompanies());
     }
     if (companyId && branchId && selectedCompany && !selectedBranch) {
@@ -95,18 +127,10 @@ const Page = (props: Props) => {
     if (companyId && branchId && employeeId && !selectedEmployee) {
       dispatch(getAllEmployees({ companyId, branchId }));
     }
-  }, [
-    dispatch,
-    companyId,
-    branchId,
-    selectedCompany,
-    selectedBranch,
-    employeeId,
-    selectedEmployee,
-  ]);
+  }, [dispatch, companyId, branchId, selectedCompany, selectedBranch, employeeId, selectedEmployee, decodedToken]);
 
   React.useEffect(() => {
-    if (companies && companyId && !selectedCompany) {
+    if (companies && companyId && !selectedCompany && decodedToken?.role === EMPLOYEE_ROLE.SUPER_ADMIN) {
       const company = companies.find((company) => company.id === companyId);
       dispatch(selectCompany(company));
     }
@@ -129,6 +153,7 @@ const Page = (props: Props) => {
     employeeId,
     selectedEmployee,
     employees,
+    decodedToken,
   ]);
 
   React.useEffect(() => {
@@ -165,7 +190,7 @@ const Page = (props: Props) => {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
+        {/* {navItems.map((item) => (
           <ListItem key={item.name} disablePadding>
             <ListItemButton sx={{ textAlign: "center" }}>
               <StyledLinkBlack to={item.url}>
@@ -173,7 +198,7 @@ const Page = (props: Props) => {
               </StyledLinkBlack>
             </ListItemButton>
           </ListItem>
-        ))}
+        ))} */}
         <ListItem key="logout" disablePadding>
           <ListItemButton sx={{ textAlign: "center" }}>
             <ListItemText onClick={handleLogout} primary={"Log Out"} />
@@ -205,14 +230,14 @@ const Page = (props: Props) => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            Time tracker
+            HR Inspector
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
+            {/* {navItems.map((item) => (
               <Button key={item.name} sx={{ color: "#fff" }}>
                 <StyledLinkWhite to={item.url}>{item.name}</StyledLinkWhite>
               </Button>
-            ))}
+            ))} */}
             <Button onClick={handleLogout} key="logout" sx={{ color: "#fff" }}>
               Log Out
             </Button>

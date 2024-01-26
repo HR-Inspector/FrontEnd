@@ -11,7 +11,7 @@ import {
 } from "../store/slices/branch";
 import { IAddBranchBody, IBranch } from "../types/branch";
 import AddBranch from "../components/addBranch";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Branches = () => {
   const [createMode, setCreateMode] = useState(false);
@@ -20,6 +20,7 @@ const Branches = () => {
   const selectedCompany = useSelector(
     (state: RootState) => state.company.selectedCompany
   );
+  const { companyId } = useParams();
   const navigate = useNavigate();
 
   const onAddBranch = (data: IAddBranchBody) => {
@@ -50,8 +51,10 @@ const Branches = () => {
   useEffect(() => {
     if (selectedCompany) {
       dispatch(getAllBranches(selectedCompany.id));
+    } else if (companyId) {
+      dispatch(getAllBranches(companyId));
     }
-  }, [dispatch, selectedCompany]);
+  }, [dispatch, companyId, selectedCompany]);
 
   return (
     <div>

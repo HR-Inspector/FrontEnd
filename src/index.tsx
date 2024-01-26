@@ -16,16 +16,17 @@ import {
   Navigate,
 } from "react-router-dom";
 import TimeTracking from "./pages/timetracking";
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <Page>
-        <Home />
-      </Page>
-    ),
-  },
+  // {
+  //   path: "/",
+  //   element: (
+  //     <Page>
+  //       <Home />
+  //     </Page>
+  //   ),
+  // },
   {
     path: "/login",
     element: <Login />,
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/" replace />,
+    element: <Navigate to="/companies" replace />,
   },
 ]);
 

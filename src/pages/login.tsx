@@ -8,12 +8,15 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../store";
-import { login } from "../store/slices/auth";
+import { login, logout } from "../store/slices/auth";
 import { clearMessage, setMessage } from "../store/slices/message";
 import { useSelector, useDispatch } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { jwtDecode } from "jwt-decode";
+import { IJwtDecoded } from "../types/jwt";
+import { EMPLOYEE_ROLE } from "../types/employee";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -41,6 +44,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const token = useSelector((state: RootState) => state.auth.token);
   const { message } = useSelector((state: RootState) => state.message);
 
   useEffect(() => {
@@ -48,10 +52,18 @@ const Login = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
+    if (isLoggedIn && token) {
+      const decoded = jwtDecode(token) as IJwtDecoded;
+      if (decoded.role === EMPLOYEE_ROLE.SUPER_ADMIN) {
+        navigate("/companies");
+      } else if (decoded.role === EMPLOYEE_ROLE.EDITOR || decoded.role === EMPLOYEE_ROLE.ADMIN) {
+        navigate(`/companies/${decoded.companyId}/branches/`);
+      } else {
+        dispatch(logout());
+        navigate('/login')
+      }
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, token, navigate, dispatch]);
 
   const handleLogin = () => {
     dispatch(login({ username, password }))

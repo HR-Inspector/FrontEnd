@@ -21,3 +21,10 @@ export interface IUpdateEmployee {
   monthlySalary?: number;
   branchId?: string;
 }
+
+export enum EMPLOYEE_ROLE {
+  EMPLOYEE = "EMPLOYEE",
+  EDITOR = "EDITOR",
+  ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
+}

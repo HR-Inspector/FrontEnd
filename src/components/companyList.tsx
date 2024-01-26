@@ -14,20 +14,18 @@ interface ICompanyListProps {
 
 const CompanyList = (props: ICompanyListProps) => {
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'id', headerName: 'ID', width: 300 },
         {
           field: 'name',
           headerName: 'Company name',
           description: 'This column is name of the company.',
           width: 150,
-          editable: true,
         },
         {
           field: 'description',
           headerName: 'Description',
           description: 'This column is company description.',
-          width: 250,
-          editable: true,
+          width: 500,
         },
         {
           field: 'showOverTime',
@@ -41,15 +39,9 @@ const CompanyList = (props: ICompanyListProps) => {
           field: 'actions',
           headerName: 'Actions',
           description: 'This column is for action buttons.',
-          width: 500,
+          width: 350,
           sortable: false,
-          renderCell: (params) => {
-              const onClick = (e: React.MouseEvent) => {
-                e.stopPropagation(); // don't select this row after clicking
-                const currentRow = params.row;
-                return alert(JSON.stringify(currentRow, null, 4));
-              };
-              
+          renderCell: (params) => {              
               return (
                 <Stack direction="row" spacing={2}>
                     <FormControlLabel
@@ -66,8 +58,7 @@ const CompanyList = (props: ICompanyListProps) => {
                         }
                         label="Show OverTime"
                     />
-                    <Button variant="outlined" color="warning" size="small" onClick={() => props.onCompanySelect(params.row)}>Select</Button>
-                    <Button variant="outlined" color="warning" size="small" onClick={onClick}>Info</Button>
+                    <Button variant="contained" size="small" onClick={() => props.onCompanySelect(params.row)}>Select</Button>
                 </Stack>
               );
           },
@@ -76,19 +67,18 @@ const CompanyList = (props: ICompanyListProps) => {
 
     return (
            <>
-              <Box sx={{ height: 400, width: '100%' }}>
+              <Box sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={props.companies}
                     columns={columns}
                     initialState={{
                     pagination: {
                         paginationModel: {
-                        pageSize: 5,
+                        pageSize: 10,
                         },
                     },
                     }}
                     pageSizeOptions={[5]}
-                    checkboxSelection
                     disableRowSelectionOnClick
                 />
               </Box>
