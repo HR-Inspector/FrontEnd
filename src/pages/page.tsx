@@ -14,8 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import styled from "@emotion/styled";
-import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import type { RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/auth";
@@ -39,26 +38,6 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = [
-  {
-    name: "Home",
-    url: "/",
-  },
-  {
-    name: "Companies",
-    url: "/companies",
-  },
-];
-
-const StyledLinkWhite = styled(RouterLink)`
-  color: #fff;
-  text-decoration: none;
-`;
-
-const StyledLinkBlack = styled(RouterLink)`
-  color: #000;
-  text-decoration: none;
-`;
 
 const Page = (props: Props) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();

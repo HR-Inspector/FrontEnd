@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Home from "./pages/home";
 import Page from "./pages/page";
 import Login from "./pages/login";
 import Companies from "./pages/companies";
@@ -19,14 +18,6 @@ import TimeTracking from "./pages/timetracking";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: (
-  //     <Page>
-  //       <Home />
-  //     </Page>
-  //   ),
-  // },
   {
     path: "/login",
     element: <Login />,
