@@ -13,40 +13,56 @@ const localizer = dayjsLocalizer(dayjs);
 
 const TimeTrackingList = (props: ITimeTrackingListProps) => {
   const [date, setDate] = useState(dayjs().toDate());
-  const { defaultDate, max, views, events } = useMemo(() => {
-    const defaultDate = props.date
-      ? dayjs().year(props.date.year()).month(props.date.month())
-      : dayjs();
 
-    return {
-      defaultDate: defaultDate.toDate(),
-      max: dayjs().add(2, "year").toDate(),
-      views: Object.keys(Views).map(
-        (k) => Views[k as unknown as keyof typeof Views]
-      ),
-      events: Object.keys(props.timeTracking?.dailyWorkedHours ?? {}).map(
-        (key, index) => {
-          const start = defaultDate.date(parseInt(key)).hour(8);
-          const end = defaultDate
-            .date(parseInt(key))
-            .hour(
-              8 + (props.timeTracking?.dailyWorkedHours[parseInt(key)] ?? 0)
-            );
+  const defaultDate = useMemo(() => {
+    if (props.date) {
+      return dayjs().year(props.date.year()).month(props.date.month()).toDate();
+    } else {
+      return dayjs().toDate();
+    }
+  }, [props.date]);
 
-          return {
-            id: index,
-            title: `${props.timeTracking?.dailyWorkedHours[parseInt(key)]}h`,
-            start,
-            end,
-          };
+  const max = useMemo(() => dayjs().add(2, "year").toDate(), []);
+  
+  const views = useMemo(() => {
+    return Object.values(Views);
+  }, []);
+
+  const events = useMemo(() => {
+    const dailyWorkedHours = props.timeTracking?.dailyWorkedHours ?? {};
+    const eventList = [];
+
+    for (const key in dailyWorkedHours) {
+      if (dailyWorkedHours.hasOwnProperty(key)) {
+        const currentDailyWorkedHours = dailyWorkedHours[key];
+
+        if (currentDailyWorkedHours) {
+          for (const item of currentDailyWorkedHours) {
+            const start = dayjs(item.startTime);
+            const end = dayjs(item.endTime);
+            const diff = end.diff(start, "hours");
+
+            eventList.push({
+              id: item.id,
+              title: `${diff}h`,
+              start,
+              end,
+            });
+          }
         }
-      ),
-    };
-  }, [props.date, props.timeTracking?.dailyWorkedHours]);
+      }
+    }
+
+    return eventList;
+  }, [props.timeTracking?.dailyWorkedHours]);
 
   useEffect(() => {
     setDate(defaultDate);
   }, [defaultDate]);
+
+  const handleNavigate = (newDate: Date, view: string, action: string) => {
+    setDate(dayjs(newDate).toDate());
+  };
 
   return (
     <>
@@ -58,9 +74,7 @@ const TimeTrackingList = (props: ITimeTrackingListProps) => {
           localizer={localizer}
           max={max}
           views={views}
-          onNavigate={(newDate, view, action) =>
-            setDate(dayjs(newDate).toDate())
-          }
+          onNavigate={handleNavigate}
         />
       </Box>
     </>
