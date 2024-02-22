@@ -17,6 +17,7 @@ const Companies = () => {
   const [createMode, setCreateMode] = useState(false);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const companies = useSelector((state: RootState) => state.company.companies);
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const navigate = useNavigate();
 
   const onAddCompany = (data: IAddCompanyBody) => {
@@ -49,8 +50,10 @@ const Companies = () => {
   }, [companies]);
 
   useEffect(() => {
-    dispatch(getAllCompanies());
-  }, [dispatch]);
+    if (isLoggedIn) {
+      dispatch(getAllCompanies());
+    }
+  }, [dispatch, isLoggedIn]);
 
   return (
     <div>
