@@ -8,6 +8,7 @@ import Login from "./pages/login";
 import Companies from "./pages/companies";
 import Employees from "./pages/employees";
 import Branches from "./pages/branches";
+import AuthCheck from "./pages/authCheck";
 import reportWebVitals from "./reportWebVitals";
 import {
   createBrowserRouter,
@@ -15,43 +16,52 @@ import {
   Navigate,
 } from "react-router-dom";
 import TimeTracking from "./pages/timetracking";
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const router = createBrowserRouter([
   {
     path: "/login",
+    
     element: <Login />,
   },
   {
     path: "/companies",
     element: (
-      <Page>
-        <Companies />
-      </Page>
+      <AuthCheck>
+        <Page>
+          <Companies />
+        </Page>
+      </AuthCheck>
     ),
   },
   {
     path: "companies/:companyId/branches/",
     element: (
-      <Page>
-        <Branches />
-      </Page>
+      <AuthCheck>
+        <Page>
+          <Branches />
+        </Page>
+      </AuthCheck>
     ),
   },
   {
     path: "companies/:companyId/branches/:branchId/employees",
     element: (
-      <Page>
-        <Employees />
-      </Page>
+      <AuthCheck>
+        <Page>
+          <Employees />
+        </Page>
+      </AuthCheck>
     ),
   },
   {
     path: "companies/:companyId/branches/:branchId/employees/:employeeId/timeTracking",
     element: (
-      <Page>
-        <TimeTracking />
-      </Page>
+      <AuthCheck>
+        <Page>
+          <TimeTracking />
+        </Page>
+      </AuthCheck>
     ),
   },
   {
