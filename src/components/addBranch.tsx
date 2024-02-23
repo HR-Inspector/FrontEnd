@@ -75,10 +75,12 @@ const AddBranch = (props: IAddBranchProps) => {
                                 id="latitude"
                                 label="Latitude"
                                 type="number"
+                                inputMode="decimal"
+                                inputProps={{ min: 0, step: 0.01 }}
                                 placeholder="Your branch latitude..."
                                 sx={{ m: 2 }}
                                 value={latitude}
-                                onChange={(e) => setLatitude(parseInt(e.target.value))}
+                                onChange={(e) => setLatitude(parseFloat(e.target.value))}
                             />
                             <br />
                             <TextField
@@ -86,10 +88,12 @@ const AddBranch = (props: IAddBranchProps) => {
                                 id="longitude"
                                 label="Longitude"
                                 type="number"
+                                inputMode="decimal"
+                                inputProps={{ min: 0, step: 0.01 }}
                                 placeholder="Your branch longitude..."
                                 sx={{ m: 2 }}
                                 value={longitude}
-                                onChange={(e) => setLongitude(parseInt(e.target.value))}
+                                onChange={(e) => setLongitude(parseFloat(e.target.value))}
                             />
                             <br />
                             <TextField
