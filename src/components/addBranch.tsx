@@ -37,17 +37,17 @@ interface IAddBranchProps {
 
 const AddBranch = (props: IAddBranchProps) => {
     const [address, setAddress] = useState('');
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
-    const [radius, setRadius] = useState(0);
+    const [latitude, setLatitude] = useState<string | number>(0);
+    const [longitude, setLongitude] = useState<string | number>(0);
+    const [radius, setRadius] = useState<string | number>(0);
     const selectedCompany = useSelector((state: RootState) => state.company.selectedCompany);
 
     const handleOnSubmit = () => {
         props.onSubmit({
             address,
-            latitude,
-            longitude,
-            radius,
+            latitude: parseFloat(latitude as string),
+            longitude: parseFloat(longitude as string),
+            radius: parseFloat(radius as string),
             companyId: selectedCompany?.id as string,
         });
     };
@@ -74,22 +74,16 @@ const AddBranch = (props: IAddBranchProps) => {
                                 required
                                 id="latitude"
                                 label="Latitude"
-                                type="number"
-                                inputMode="decimal"
-                                inputProps={{ min: 0, step: 0.01 }}
                                 placeholder="Your branch latitude..."
                                 sx={{ m: 2 }}
                                 value={latitude}
-                                onChange={(e) => setLatitude(parseFloat(e.target.value))}
+                                onChange={(e) => setLatitude(e.target.value)}
                             />
                             <br />
                             <TextField
                                 required
                                 id="longitude"
                                 label="Longitude"
-                                type="number"
-                                inputMode="decimal"
-                                inputProps={{ min: 0, step: 0.01 }}
                                 placeholder="Your branch longitude..."
                                 sx={{ m: 2 }}
                                 value={longitude}
@@ -100,11 +94,10 @@ const AddBranch = (props: IAddBranchProps) => {
                                 required
                                 id="radius"
                                 label="Radius"
-                                type="number"
                                 placeholder="Your branch radius..."
                                 sx={{ m: 2 }}
                                 value={radius}
-                                onChange={(e) => setRadius(parseInt(e.target.value))}
+                                onChange={(e) => setRadius(e.target.value)}
                             />
                             <br />
                             <Button sx={{ m: 2 }} variant="outlined" onClick={props.onBack}>Back</Button>
