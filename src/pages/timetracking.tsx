@@ -16,7 +16,7 @@ const TimeTracking = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { employeeId } = useParams();
   const [date, setDate] = useState<dayjs.Dayjs | null>(dayjs());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const timeTracking = useSelector(
     (state: RootState) => state.employee.timeTracking
@@ -24,7 +24,7 @@ const TimeTracking = () => {
 
   const onDateSelect = (value: dayjs.Dayjs | null) => {
     if (value) {
-      setMonth(value.month() + 1);
+      setMonth(value.month());
       setYear(value.year());
     }
     setDate(value);
