@@ -12,6 +12,11 @@ export interface IEmployee {
   companyId: string | null;
 }
 
+export interface IEmployeeResponse {
+  users: IEmployee[];
+  totalCount: number;
+}
+
 export interface IUpdateEmployee {
   phoneNumber?: string;
   firstName?: string;

@@ -14,14 +14,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import styled from "@emotion/styled";
+import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import type { RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/auth";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { getAllCompanies, selectCompany } from "../store/slices/company";
 import { getAllBranches, selectBranch } from "../store/slices/branch";
-import Alert from "@mui/material/Alert";
 import { setMessage } from "../store/slices/message";
 import { getAllEmployees, selectEmployee } from "../store/slices/employee";
 import { jwtDecode } from 'jwt-decode';
@@ -36,6 +37,16 @@ interface Props {
   window?: () => Window;
   children: React.ReactNode;
 }
+
+const StyledLinkWhite = styled(RouterLink)`
+  color: #fff;
+  text-decoration: none;
+`;
+
+const StyledLinkBlack = styled(RouterLink)`
+  color: #000;
+  text-decoration: none;
+`;
 
 const drawerWidth = 240;
 
@@ -104,7 +115,7 @@ const Page = (props: Props) => {
       dispatch(getAllBranches(companyId));
     }
     if (companyId && branchId && employeeId && !selectedEmployee) {
-      dispatch(getAllEmployees({ companyId, branchId }));
+      dispatch(getAllEmployees({ companyId, branchId, limit: 10, offset: 0}));
     }
   }, [dispatch, companyId, branchId, selectedCompany, selectedBranch, employeeId, selectedEmployee, decodedToken]);
 
@@ -165,19 +176,10 @@ const Page = (props: Props) => {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
+        <StyledLinkBlack to="/companies">HR Inspector</StyledLinkBlack>
       </Typography>
       <Divider />
       <List>
-        {/* {navItems.map((item) => (
-          <ListItem key={item.name} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <StyledLinkBlack to={item.url}>
-                <ListItemText primary={item.name} />
-              </StyledLinkBlack>
-            </ListItemButton>
-          </ListItem>
-        ))} */}
         <ListItem key="logout" disablePadding>
           <ListItemButton sx={{ textAlign: "center" }}>
             <ListItemText onClick={handleLogout} primary={"Log Out"} />
@@ -209,14 +211,9 @@ const Page = (props: Props) => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            HR Inspector
+           <StyledLinkWhite to="/companies">HR Inspector</StyledLinkWhite>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {/* {navItems.map((item) => (
-              <Button key={item.name} sx={{ color: "#fff" }}>
-                <StyledLinkWhite to={item.url}>{item.name}</StyledLinkWhite>
-              </Button>
-            ))} */}
             <Button onClick={handleLogout} key="logout" sx={{ color: "#fff" }}>
               Log Out
             </Button>

@@ -87,7 +87,7 @@ const AddBranch = (props: IAddBranchProps) => {
                                 placeholder="Your branch longitude..."
                                 sx={{ m: 2 }}
                                 value={longitude}
-                                onChange={(e) => setLongitude(parseFloat(e.target.value))}
+                                onChange={(e) => setLongitude(e.target.value)}
                             />
                             <br />
                             <TextField

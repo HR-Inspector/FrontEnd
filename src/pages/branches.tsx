@@ -27,7 +27,6 @@ const Branches = () => {
     dispatch(addBranch(data))
       .unwrap()
       .then(() => {
-        //dispatch(getAllCompanies())
         return true;
       })
       .catch((e) => {

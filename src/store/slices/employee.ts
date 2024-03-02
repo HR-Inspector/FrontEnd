@@ -1,28 +1,44 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "./message";
-import { IEmployee, IUpdateEmployee } from "../../types/employee";
+import {
+  IEmployee,
+  IEmployeeResponse,
+  IUpdateEmployee,
+} from "../../types/employee";
 import employeeService from "../../services/employee";
 import { ITimeTracking } from "../../types/timetracking";
 
 export interface EmployeeState {
   employees: IEmployee[];
+  totalEmployees: number;
   timeTracking: ITimeTracking | null;
   selectedEmployee: IEmployee | null;
 }
 
 const initialState: EmployeeState = {
   employees: [],
+  totalEmployees: 0,
   timeTracking: null,
   selectedEmployee: null,
 };
 
 export const getAllEmployees = createAsyncThunk(
   "employees/getAllEmployees",
-  async (args: { companyId: string; branchId: string }, thunkAPI) => {
+  async (
+    args: {
+      companyId: string;
+      branchId: string;
+      limit: number;
+      offset: number;
+    },
+    thunkAPI
+  ) => {
     try {
       const data = await employeeService.getAllEmployees(
         args.companyId,
-        args.branchId
+        args.branchId,
+        args.limit,
+        args.offset
       );
       return data;
     } catch (error) {
@@ -50,7 +66,12 @@ export const updateEmployee = createAsyncThunk(
     try {
       const data = await employeeService.updateEmployee(args.id, args.body);
       thunkAPI.dispatch(
-        getAllEmployees({ companyId: args.companyId, branchId: args.branchId })
+        getAllEmployees({
+          companyId: args.companyId,
+          branchId: args.branchId,
+          limit: 10,
+          offset: 0,
+        })
       );
       return data;
     } catch (error) {
@@ -98,12 +119,14 @@ const employeeSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       getAllEmployees.fulfilled,
-      (state: EmployeeState, action: { payload: IEmployee[] }) => {
-        state.employees = action.payload;
+      (state: EmployeeState, action: { payload: IEmployeeResponse }) => {
+        state.employees = action.payload.users;
+        state.totalEmployees = action.payload.totalCount;
       }
     );
     builder.addCase(getAllEmployees.rejected, (state: EmployeeState) => {
       state.employees = [];
+      state.totalEmployees = 0;
     });
     builder.addCase(
       getTimeTrackingInfo.fulfilled,

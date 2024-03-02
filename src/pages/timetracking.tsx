@@ -60,7 +60,7 @@ const TimeTracking = () => {
           salaryForMonth: {timeTracking?.salaryForMonth}
         </Typography>
       </Stack>
-      <TimeTrackingList timeTracking={timeTracking} date={date} />
+      <TimeTrackingList timeTracking={timeTracking} date={date} onNavigate={onDateSelect} />
     </div>
   );
 };

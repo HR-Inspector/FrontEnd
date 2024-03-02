@@ -36,10 +36,6 @@ const Companies = () => {
     setCreateMode(true);
   };
 
-  const changeOvertime = (id: string) => {
-    //setCompanies((prev) => prev.map(p => p.id === id ? { ...p, showOverTime: !p.showOverTime } : p));
-  };
-
   const onCompanySelect = (company: ICompany) => {
     dispatch(selectCompany(company));
     navigate(`${company.id}/branches/`);
@@ -74,7 +70,6 @@ const Companies = () => {
           </Button>
           <CompanyList
             companies={companies}
-            onChangeOvertime={changeOvertime}
             onCompanySelect={onCompanySelect}
           />
         </>

@@ -1,14 +1,11 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ICompany } from '../types/company';
 
 interface ICompanyListProps {
   companies: ICompany[];
-  onChangeOvertime: (id: string) => void;
   onCompanySelect: (company: ICompany) => void;
 };
 
@@ -28,14 +25,6 @@ const CompanyList = (props: ICompanyListProps) => {
           width: 500,
         },
         {
-          field: 'showOverTime',
-          headerName: 'OverTime',
-          description: 'This column is for showing overtime.',
-          type: 'boolean',
-          width: 150,
-          editable: true,
-        },
-        {
           field: 'actions',
           headerName: 'Actions',
           description: 'This column is for action buttons.',
@@ -44,20 +33,6 @@ const CompanyList = (props: ICompanyListProps) => {
           renderCell: (params) => {              
               return (
                 <Stack direction="row" spacing={2}>
-                    <FormControlLabel
-                        sx={{
-                        display: 'block',
-                        }}
-                        control={
-                        <Switch
-                            checked={params.row.showOverTime}
-                            onChange={() => props.onChangeOvertime(params.row.id)}
-                            name="showOverTime"
-                            color="primary"
-                        />
-                        }
-                        label="Show OverTime"
-                    />
                     <Button variant="contained" size="small" onClick={() => props.onCompanySelect(params.row)}>Select</Button>
                 </Stack>
               );
@@ -78,7 +53,7 @@ const CompanyList = (props: ICompanyListProps) => {
                         },
                     },
                     }}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[10]}
                     disableRowSelectionOnClick
                 />
               </Box>

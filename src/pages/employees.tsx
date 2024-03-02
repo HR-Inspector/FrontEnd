@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { RootState } from "../store";
@@ -12,9 +12,12 @@ import EmployeeList from "../components/employeeList";
 import { IEmployee, IUpdateEmployee } from "../types/employee";
 
 const Employees = () => {
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { companyId, branchId } = useParams();
   const employees = useSelector((state: RootState) => state.employee.employees);
+  const totalEmployees = useSelector((state: RootState) => state.employee.totalEmployees);
   const navigate = useNavigate();
 
   const onEmployeeSelect = (employee: IEmployee) => {
@@ -30,19 +33,31 @@ const Employees = () => {
     }
   };
 
+  const onPageChange = useCallback((page: number, pageSize: number) =>  {
+    const newOffset = page * 10;
+    if(pageSize !== limit) {
+      setLimit(pageSize);
+    }
+    if(newOffset !== offset) {
+      setOffset(newOffset);
+    }
+  }, [limit, offset]);
+
   useEffect(() => {
     if (companyId && branchId) {
-      dispatch(getAllEmployees({ companyId, branchId }));
+      dispatch(getAllEmployees({ companyId, branchId, limit, offset }));
     }
-  }, [branchId, companyId, dispatch]);
+  }, [dispatch, branchId, companyId, limit, offset]);
 
   return (
     <div>
       <h1>Employees page</h1>
       <EmployeeList
         employees={employees}
+        totalRowCount={totalEmployees}
         onEmployeeSelect={onEmployeeSelect}
         onEmployeeUpdate={onEmployeeUpdate}
+        onPageChange={onPageChange}
       />
     </div>
   );
