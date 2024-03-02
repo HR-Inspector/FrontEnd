@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AuthService from "../../services/auth";
 import { setMessage } from "./message";
+import { cleanCompany } from "./company";
+import { cleanBranch } from "./branch";
+import { cleanEmployee } from "./employee";
 
 export interface AuthState {
   token: string | null;
@@ -32,9 +35,15 @@ export const login = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await AuthService.logout();
-});
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (args, thunkAPI) => {
+    await AuthService.logout();
+    thunkAPI.dispatch(cleanCompany());
+    thunkAPI.dispatch(cleanBranch());
+    thunkAPI.dispatch(cleanEmployee());
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",

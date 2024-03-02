@@ -142,10 +142,14 @@ const employeeSlice = createSlice({
     selectEmployee: (state, action) => {
       state.selectedEmployee = action.payload;
     },
+    cleanEmployee: (state) => {
+      state.employees = [];
+      state.selectedEmployee = null;
+    },
   },
 });
 
-export const { selectEmployee } = employeeSlice.actions;
+export const { selectEmployee, cleanEmployee } = employeeSlice.actions;
 
 const { reducer } = employeeSlice;
 
