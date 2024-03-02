@@ -62,8 +62,6 @@ const TimeTrackingList = (props: ITimeTrackingListProps) => {
   }, [defaultDate]);
 
   const handleNavigate = (newDate: Date, view: string, action: string) => {
-    console.log('navigate');
-    console.log(newDate, view, action);
     setDate(dayjs(newDate).toDate());
     props.onNavigate(dayjs(newDate));
   };
