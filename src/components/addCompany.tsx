@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -38,7 +36,6 @@ interface IAddCompanyProps {
 const AddCompany = (props: IAddCompanyProps) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [showOverTime, setShowOverTime] = useState(false);
     const [adminUsername, setAdminUsername] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
 
@@ -46,7 +43,7 @@ const AddCompany = (props: IAddCompanyProps) => {
         props.onSubmit({
             name,
             description,
-            showOverTime,
+            showOverTime: false,
             adminUsername,
             adminPassword,
         });
@@ -78,21 +75,6 @@ const AddCompany = (props: IAddCompanyProps) => {
                                 sx={{ m: 2 }}
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                            />
-                            <br />
-                            <FormControlLabel
-                                sx={{
-                                display: 'block',
-                                }}
-                                control={
-                                <Switch
-                                    checked={showOverTime}
-                                    onChange={() => setShowOverTime((prev) => !prev)}
-                                    name="OverTime"
-                                    color="primary"
-                                />
-                                }
-                                label="OverTime"
                             />
                             <br />
                             <TextField

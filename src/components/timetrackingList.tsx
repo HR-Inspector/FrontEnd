@@ -7,6 +7,7 @@ import { Calendar, Views, dayjsLocalizer } from "react-big-calendar";
 interface ITimeTrackingListProps {
   timeTracking: ITimeTracking | null;
   date: dayjs.Dayjs | null;
+  onNavigate(date: dayjs.Dayjs): void;
 }
 
 const localizer = dayjsLocalizer(dayjs);
@@ -61,7 +62,10 @@ const TimeTrackingList = (props: ITimeTrackingListProps) => {
   }, [defaultDate]);
 
   const handleNavigate = (newDate: Date, view: string, action: string) => {
+    console.log('navigate');
+    console.log(newDate, view, action);
     setDate(dayjs(newDate).toDate());
+    props.onNavigate(dayjs(newDate));
   };
 
   return (

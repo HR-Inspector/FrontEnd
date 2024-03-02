@@ -56,7 +56,7 @@ const BranchList = (props: IBranchListProps) => {
                         },
                     },
                     }}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[10]}
                     disableRowSelectionOnClick
                 />
               </Box>

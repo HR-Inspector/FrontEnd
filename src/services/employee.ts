@@ -1,19 +1,29 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 import { API_URL } from "../constants/api";
-import { IEmployee, IUpdateEmployee } from "../types/employee";
+import {
+  IEmployee,
+  IEmployeeResponse,
+  IUpdateEmployee,
+} from "../types/employee";
 import { ITimeTracking } from "../types/timetracking";
 
 const getAllEmployees = (
   companyId: string,
-  branchId: string
-): Promise<IEmployee[]> => {
+  branchId: string,
+  limit: number,
+  offset: number
+): Promise<IEmployeeResponse> => {
   return axios
     .get(API_URL + `companies/${companyId}/branches/${branchId}/users`, {
       headers: authHeader(),
+      params: {
+        limit: limit || 10,
+        offset: offset || 0,
+      },
     })
-    .then((response: { data: { users: IEmployee[] } }) => {
-      return response.data.users;
+    .then((response: { data: IEmployeeResponse }) => {
+      return response.data;
     });
 };
 
