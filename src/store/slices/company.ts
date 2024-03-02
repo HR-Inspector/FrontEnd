@@ -63,10 +63,14 @@ const companySlice = createSlice({
     selectCompany: (state, action) => {
       state.selectedCompany = action.payload;
     },
+    cleanCompany: (state) => {
+      state.companies = [];
+      state.selectedCompany = null;
+    },
   },
 });
 
-export const { selectCompany } = companySlice.actions;
+export const { selectCompany, cleanCompany } = companySlice.actions;
 
 const { reducer } = companySlice;
 

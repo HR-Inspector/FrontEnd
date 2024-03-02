@@ -56,7 +56,7 @@ const Page = (props: Props) => {
   const location =  useLocation();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const token = useSelector((state: RootState) => state.auth.token);
-  const [decodedToken, setDecodedToken] = React.useState<IJwtDecoded | null>(null);
+  const [decodedToken, setDecodedToken] = React.useState<IJwtDecoded | null>(token ? jwtDecode(token) as IJwtDecoded : null);
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -94,9 +94,6 @@ const Page = (props: Props) => {
         return;
       } else if (decodedToken.role === EMPLOYEE_ROLE.EDITOR || decodedToken.role === EMPLOYEE_ROLE.ADMIN) {
         if(location.pathname === '/companies') {
-          console.log('here')
-          console.log('decoded.companyId')
-          console.log(decodedToken.companyId)
           navigate(`/companies/${decodedToken.companyId}/branches/`);
         }
       } else {
