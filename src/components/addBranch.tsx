@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -9,6 +9,8 @@ import { styled } from '@mui/material/styles';
 import { IAddBranchBody } from '../types/branch';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import { IJwtDecoded } from '../types/jwt';
+import { jwtDecode } from 'jwt-decode';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     width: '100%',
@@ -41,6 +43,15 @@ const AddBranch = (props: IAddBranchProps) => {
     const [longitude, setLongitude] = useState<string | number>(0);
     const [radius, setRadius] = useState<string | number>(0);
     const selectedCompany = useSelector((state: RootState) => state.company.selectedCompany);
+    const token = useSelector((state: RootState) => state.auth.token);
+    const [decodedToken, setDecodedToken] = useState<IJwtDecoded | null>(token ? jwtDecode(token) as IJwtDecoded : null);
+
+    useEffect(() => {
+        if (token) {
+          const decoded = jwtDecode(token) as IJwtDecoded;  
+          setDecodedToken(decoded);
+        }
+      }, [token]);
 
     const handleOnSubmit = () => {
         props.onSubmit({
@@ -48,7 +59,7 @@ const AddBranch = (props: IAddBranchProps) => {
             latitude: parseFloat(latitude as string),
             longitude: parseFloat(longitude as string),
             radius: parseFloat(radius as string),
-            companyId: selectedCompany?.id as string,
+            companyId: selectedCompany?.id as string ?? decodedToken?.companyId,
         });
     };
 
