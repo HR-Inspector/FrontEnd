@@ -29,10 +29,10 @@ export const getAllBranches = createAsyncThunk(
 
 export const addBranch = createAsyncThunk(
   "branches/addBranch",
-  async (body: IAddBranchBody, thunkAPI) => {
+  async (args: { companyId: string; body: IAddBranchBody }, thunkAPI) => {
     try {
-      const data = await BranchService.addBranch(body.companyId, body);
-      thunkAPI.dispatch(getAllBranches(body.companyId));
+      const data = await BranchService.addBranch(args.companyId, args.body);
+      thunkAPI.dispatch(getAllBranches(args.companyId));
       return data;
     } catch (error) {
       let message = "An error accrued";

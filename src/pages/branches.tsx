@@ -23,8 +23,8 @@ const Branches = () => {
   const { companyId } = useParams();
   const navigate = useNavigate();
 
-  const onAddBranch = (data: IAddBranchBody) => {
-    dispatch(addBranch(data))
+  const onAddBranch = (companyId: string, data: IAddBranchBody) => {
+    dispatch(addBranch({ companyId, body: data }))
       .unwrap()
       .then(() => {
         return true;
