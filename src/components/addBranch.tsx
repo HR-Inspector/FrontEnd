@@ -68,7 +68,7 @@ const AddBranch = (props: IAddBranchProps) => {
       props.onSubmit(companyId, {
         trackingType: BranchTrackingType.BLUETOOTH,
         trackingBluetooth: {
-          names: bluetoothNames.split(",").map((name) => name.trim()),
+          deviceNames: bluetoothNames.split(",").map((name) => name.trim()),
         },
       });
       return;
