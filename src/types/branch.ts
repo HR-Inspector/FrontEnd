@@ -22,7 +22,7 @@ export interface ICreateBranchLocationBody {
 }
 
 export interface ICreateBranchBluetooth {
-  names: string[];
+  deviceNames: string[];
 }
 
 export interface IAddBranchBody {
